@@ -3,7 +3,7 @@
 , "description": "Manages Brackets extensions from a central repository"
 , "version": "0.1.0"
 , "scripts": {
-    "start": "nodemon -w . server.js"
+    "start": "nodemon -w server/ server/server.js"
   }
 , "author": "Jonathan Diehl <diehl@cs.rwth-aachen.de>"
 , "repository": {
@@ -15,5 +15,6 @@
   }
 , "dependencies": {
     "websocket": "= 1.0.3"
+  , "node-promise": ">= 0.5.2"
   }
 }

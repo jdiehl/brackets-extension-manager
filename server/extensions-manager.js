@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2012 Adobe Systems Incorporated. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+var pathDisabled = "../../disabled/";
+var pathEnabled = "../../user/";
+
+var fs = require("fs");
+var exec = require('child_process').exec;
+var defer = require("node-promise/promise").defer;
+
+// load and flag extensions
+var extensions;
+_loadExtensions();
+
+// create an index of the given names
+function _indexExtensions(index, names, status) {
+	for (var i in names) {
+		index[names[i]] = status;
+	}
+}
+
+// add status flag from the index to the extensions list
+function _flagExtensions(extensions, index) {
+	for (var i in extensions) {
+		var ext = extensions[i];
+		ext.status = index[ext.name];
+	}
+}
+
+function _loadExtensions() {
+	extensions = JSON.parse(fs.readFileSync("./database.json"));
+	var index = {};
+	_indexExtensions(index, fs.readdirSync(pathDisabled), 0); // disabled
+	_indexExtensions(index, fs.readdirSync(pathEnabled), 1);     // enabled
+	_flagExtensions(extensions, index);
+}
+
+function _extensionWithName(name) {
+	for (var i in extensions) {
+		var ext = extensions[i];
+		if (ext.name === name) return ext;
+	}
+}
+
+// get list of extensions and flag them as uninstalled, installed, or active
+function list() {
+	return extensions;
+}
+
+// install an extension
+function install(name) {
+	var ext = _extensionWithName(name);
+	if (!ext) throw "Extension " + name + "not found";
+
+	// clone the extension repository
+	var deferred = defer();
+	var process = exec("/usr/bin/git clone " + ext.repository.url + " " + pathDisabled + name, function (res) {
+		ext.status = 0;
+		enable(name);
+		deferred.resolve();
+	});
+
+	return deferred.promise;
+}
+
+// enable an extension
+function enable(name, ext) {
+	if (!ext) ext = _extensionWithName(name);
+	if (!ext) throw "Extension " + name + "not found";
+
+	// create link from disabled to enabled
+	fs.symlinkSync("../disabled/" + name, pathEnabled + name);
+	ext.status = 1;
+}
+
+// disable an extension
+function disable(name, ext) {
+	if (!ext) ext = _extensionWithName(name);
+	if (!ext) throw "Extension " + name + "not found";
+
+	// delete link
+	var stats = fs.lstatSync(pathEnabled + name);
+	if (!stats.isSymbolicLink()) throw "Extension " + name + " is not enabled";
+	fs.unlinkSync(pathEnabled + name);
+	ext.status = 0;
+}
+
+// public methods
+module.exports = {
+	list: list,
+	install: install,
+	enable: enable,
+	disable: disable
+};

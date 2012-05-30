@@ -63,7 +63,15 @@ function onSocketMessage(connection, data) {
 		var module = require("./" + msg.module);
 		var handler = module[msg.method];
 		var response = handler.apply(null, msg.args);
-		connection.send(JSON.stringify({ id: msg.id, response: response }));
+		if (response && typeof response.then === "function") {
+			response.then(function (response) {
+				connection.send(JSON.stringify({ id: msg.id, response: response }));
+			}, function (error) {
+				console.log(error);
+			});
+		} else {
+			connection.send(JSON.stringify({ id: msg.id, response: response }));
+		}
 	} catch (err) {
 		console.log(err);
 	}

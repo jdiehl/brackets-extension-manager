@@ -33,6 +33,7 @@ define(function (require, exports, module) {
 			var id = msg.id;
 			if (_messageCallbacks[id]) {
 				_messageCallbacks[id](msg.response);
+				delete _messageCallbacks[id];
 			}
 		}
 	}

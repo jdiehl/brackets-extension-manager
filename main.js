@@ -28,17 +28,19 @@ define(function (require, exports, module) {
     'use strict';
 
     // Sadly hardcoded for now
-    var extensionDir = "extensions/user/ExtensionManager";
+    var extensionDir = "extensions/user/";
+    var extensionManagerDir = extensionDir + "ExtensionManager/";
     
     // Brackets modules
     var EditorManager           = brackets.getModule("editor/EditorManager"),
         ProjectManager          = brackets.getModule("project/ProjectManager"),
         Commands                = brackets.getModule("command/Commands"),
         CommandManager          = brackets.getModule("command/CommandManager"),
-        KeyBindingManager       = brackets.getModule("command/KeyBindingManager");
+        KeyBindingManager       = brackets.getModule("command/KeyBindingManager"),
+        ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
 
     // Extension modules
-    var client = require("client");
+    var client = require("extensions-manager-client");
     
     var database    = null;
     var $template   = null;
@@ -70,7 +72,7 @@ define(function (require, exports, module) {
     }
     
     function _loadDatabase() {
-        $.getJSON(extensionDir + "/database.json", function (json) {
+        $.getJSON(extensionManagerDir + "database.json", function (json) {
             database = json;
         });
     }
@@ -82,26 +84,28 @@ define(function (require, exports, module) {
     }
     
     function _loadStyle() {
-        $("<link rel='stylesheet' type='text/css'>").attr("href", extensionDir + "/main.css").appendTo(window.document.head);
+        $("<link rel='stylesheet' type='text/css'>").attr("href", extensionManagerDir + "main.css").appendTo(window.document.head);
     }
         
     function _loadTemplate() {
-        $.get(extensionDir + "/main.html", function (template) {
+        $.get(extensionManagerDir + "main.html", function (template) {
             // Append template to a DIV to make .find() work
             $template = $("<div>").append(template).find(".modal");
         });
     }
-    
+
     // Init the UI
     function init() {
         _loadStyle();
         _loadTemplate();
         _registerShortcut();
-        client.send("ExtensionManager", "list", function (res) {
-            console.log(res);
+
+        client.init(function () {
+            // Todo: set up extension manager commands here
+            client.install("markdown");
         });
     }
 
     _loadDatabase();
-    client.connect(init);
+    $(init);
 });
