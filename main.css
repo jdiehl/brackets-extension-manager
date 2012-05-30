@@ -1,0 +1,55 @@
+.extensionManager .tabSwitcher {
+    float: right;
+    margin: 5px 15px;
+}
+
+.extensionManager .modal-body {
+    padding: 0;
+}
+
+.extensionManager .extensions > div {
+    position: relative;
+    border-bottom: 1px solid #eee;
+    padding: 10px 15px;
+    padding-left: 40px;
+    background-image: -webkit-linear-gradient(top, #bdf, #69c);
+    min-height: 35px;
+}
+.extensionManager .extensions > div:last-child {
+    border-bottom: none;
+}
+.extensionManager div.disabled {
+    background-image: -webkit-linear-gradient(top, #eee, #999);
+}
+
+.extensionManager .installationCheckbox {
+    position: absolute;
+    left: 15px;
+    top: 11px
+}
+
+.extensionManager .titleField {
+    font-size: large;
+}
+.extensionManager .descriptionField {
+    margin-top: 5px;
+    margin-right: 200px;
+}
+
+.extensionManager .buttons {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+.extensionManager .versionField {
+    display: none;
+}
+.extensionManager .uptodate .versionField {
+    display: inline-block;
+}
+.extensionManager .uninstallButton {
+    margin-left: 5px;
+}
+.extensionManager .uptodate .updateButton {
+    display: none;
+}

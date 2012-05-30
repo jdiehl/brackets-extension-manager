@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet/less" type="text/css" href="../../../styles/brackets.less">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="../../../thirdparty/jquery-1.7.min.js"></script>
+	<script src="../../../thirdparty/less-1.3.0.min.js"></script>
+    <script>
+        $(function () {
+            var $list = $('.extensions');
+            var $item = $list.find("> div:first").remove();
+            $list.append($item.clone(true).addClass("disabled").addClass("uptodate"));
+            $item.find(".installationCheckbox").attr("checked", true);
+            $list.append($item.clone(true).addClass("enabled").addClass("uptodate"));
+            $list.append($item.clone(true).addClass("enabled").addClass("outdated"));
+        });
+    </script>
+</head>
+
+<body>
+	<div class="modal-backdrop in"></div>
+	<div class="modal in extensionManager">
+		<div class="modal-header">
+			<a href="#" class="close">&times;</a>
+			<div class="tabSwitcher">
+				<a>Installed</a> | <a>Available</a>
+			</div>
+			<h1 class="dialog-title">Extension Manager</h1>
+		</div>
+
+		<div class="modal-body">
+            <div class="extensions">
+                <div>
+                    <input type="checkbox" class="installationCheckbox">
+                    <div class="titleField">My awesome extension</div>
+                    <div class="descriptionField">This extension does something truly, utterly amazing. It is absolutely mindblowing.</div>
+                    <div class="buttons">
+                        <div class="versionField">1.2.3</div>
+                        <button class="btn primary updateButton">Update</button>
+                        <button class="btn danger uninstallButton">Uninstall</button>
+                    </div>
+                </div>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn">Update all</button>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+[
+	{
+		"name": "ReloadInBrowser",
+		"title": "Reload in Browser",
+		"description": "Adds a toolbar button and shortcut to reload the page in the browser",
+		"version": "0.2",
+		"date": "2012-05-30 11:30:00 GMT+0200",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/DennisKehrig/brackets.ReloadInBrowser.git"
+		}
+	},
+	{
+		"name": "markdown",
+		"title": "Markdown",
+		"description": "Display comment blocks with rendered markdown",
+		"version": "1.0",
+		"date": "2012-05-29 07:00:00 GMT+0200",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/jpkraemer/markdown-brackets.git"
+		}
+	}
+]
