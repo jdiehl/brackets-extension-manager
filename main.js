@@ -85,7 +85,6 @@ define(function (require, exports, module) {
             alert("Update all is not yet implemented");
         });
 
-
         $dialog
             .appendTo(window.document.body)
             .modal({

@@ -1,6 +1,41 @@
+.extensionManager .modal-header {
+    position: relative;
+}
+
 .extensionManager .tabSwitcher {
-    float: right;
-    margin: 5px 15px;
+    position: absolute;
+    bottom: 0;
+    right: 50px;
+    width: 300px;
+    text-align: right;
+    margin: 0;
+    list-style-type: none;
+}
+
+.extensionManager .tabSwitcher li {
+    display: inline-block;
+}
+
+.extensionManager .tabSwitcher a {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 8px 10px 5px 10px;
+    font-size: large;
+
+    border: 1px solid #eee;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+
+    color: #999;
+}
+.extensionManager .tabSwitcher .active a {
+    cursor: default;
+    border-color: #ddd;
+    background-image: -webkit-linear-gradient(top, #eee, #fff);
+}
+.extensionManager .tabSwitcher .active a, .extensionManager .tabSwitcher a:hover {
+    color: #000;
 }
 
 .extensionManager .modal-body {
