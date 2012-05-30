@@ -1,10 +1,47 @@
+.extensionManager .modal-header {
+    position: relative;
+}
+
 .extensionManager .tabSwitcher {
-    float: right;
-    margin: 5px 15px;
+    position: absolute;
+    bottom: 0;
+    right: 50px;
+    width: 300px;
+    text-align: right;
+    margin: 0;
+    list-style-type: none;
+}
+
+.extensionManager .tabSwitcher li {
+    display: inline-block;
+}
+
+.extensionManager .tabSwitcher a {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 8px 10px 5px 10px;
+    font-size: large;
+
+    border: 1px solid #eee;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+
+    color: #999;
+}
+.extensionManager .tabSwitcher .active a {
+    cursor: default;
+    border-color: #ddd;
+    background-image: -webkit-linear-gradient(top, #eee, #fff);
+}
+.extensionManager .tabSwitcher .active a, .extensionManager .tabSwitcher a:hover {
+    color: #000;
 }
 
 .extensionManager .modal-body {
     padding: 0;
+    max-height: 500px;
+    overflow: auto;
 }
 
 .extensionManager .extensions > div {
@@ -17,9 +54,6 @@
 }
 .extensionManager .extensions > div:last-child {
     border-bottom: none;
-}
-.extensionManager div.disabled {
-    background-image: -webkit-linear-gradient(top, #eee, #999);
 }
 
 .extensionManager .installationCheckbox {
@@ -41,15 +75,27 @@
     right: 15px;
     top: 10px;
 }
+
+/* Default: enabled and up to date */
 .extensionManager .versionField {
-    display: none;
-}
-.extensionManager .uptodate .versionField {
     display: inline-block;
+}
+.extensionManager .updateButton {
+    display: none
 }
 .extensionManager .uninstallButton {
     margin-left: 5px;
 }
-.extensionManager .uptodate .updateButton {
+
+/* Outdated extensions */
+.extensionManager .outdated .updateButton {
+    display: inline;
+}
+.extensionManager .outdated .versionField {
     display: none;
+}
+
+/* Disabled extensions */
+.extensionManager div.disabled {
+    background-image: -webkit-linear-gradient(top, #eee, #999);
 }

@@ -10,10 +10,14 @@
         $(function () {
             var $list = $('.extensions');
             var $item = $list.find("> div:first").remove();
-            $list.append($item.clone(true).addClass("disabled").addClass("uptodate"));
+            
             $item.find(".installationCheckbox").attr("checked", true);
-            $list.append($item.clone(true).addClass("enabled").addClass("uptodate"));
-            $list.append($item.clone(true).addClass("enabled").addClass("outdated"));
+            $list.append($item.clone(true));
+            $list.append($item.clone(true).addClass("outdated"));
+
+            $item.find(".installationCheckbox").attr("checked", false);
+            $list.append($item.clone(true).addClass("disabled"));
+            $list.append($item.clone(true).addClass("disabled").addClass("outdated"));
         });
     </script>
 </head>
@@ -23,9 +27,10 @@
 	<div class="modal in extensionManager">
 		<div class="modal-header">
 			<a href="#" class="close">&times;</a>
-			<div class="tabSwitcher">
-				<a>Installed</a> | <a>Available</a>
-			</div>
+			<ul class="tabSwitcher">
+				<li class="active installedTab"><a>Installed</a></li>
+                <li class="availableTab"><a>Available</a></li>
+			</ul>
 			<h1 class="dialog-title">Extension Manager</h1>
 		</div>
 
@@ -45,7 +50,7 @@
 		</div>
 
 		<div class="modal-footer">
-			<button class="btn">Update all</button>
+			<button class="btn updateAllButton">Update all</button>
 		</div>
 	</div>
 </body>
