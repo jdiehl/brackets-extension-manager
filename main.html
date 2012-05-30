@@ -10,10 +10,20 @@
         $(function () {
             var $list = $('.extensions');
             var $item = $list.find("> div:first").remove();
-            $list.append($item.clone(true).addClass("disabled").addClass("uptodate"));
+            
             $item.find(".installationCheckbox").attr("checked", true);
-            $list.append($item.clone(true).addClass("enabled").addClass("uptodate"));
-            $list.append($item.clone(true).addClass("enabled").addClass("outdated"));
+            $list.append($item.clone(true));
+            $list.append($item.clone(true).addClass("outdated"));
+
+            $item.find(".installationCheckbox").attr("checked", false);
+            $list.append($item.clone(true).addClass("disabled"));
+            $list.append($item.clone(true).addClass("disabled").addClass("outdated"));
+            
+            $list.append($item.clone(true));
+            $list.append($item.clone(true));
+            $list.append($item.clone(true));
+            $list.append($item.clone(true));
+            $list.append($item.clone(true));
         });
     </script>
 </head>
@@ -45,7 +55,7 @@
 		</div>
 
 		<div class="modal-footer">
-			<button class="btn">Update all</button>
+			<button class="btn updateAllButton">Update all</button>
 		</div>
 	</div>
 </body>

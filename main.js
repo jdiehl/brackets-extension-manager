@@ -55,10 +55,36 @@ define(function (require, exports, module) {
         $.each(database, function (index, extension) {
             var $extension = $item.clone().appendTo($extensions);
             
+            var enabled     = index === 0;
+            var uptodate    = index === 1;
+            
+            $extension
+                .toggleClass("disabled", !enabled)
+                .toggleClass("outdated", !uptodate);
+            
+            $extension
+                .find(".installationCheckbox")
+                .attr("checked", enabled)
+                .change(function () {
+                    $extension.toggleClass("disabled", !this.checked);
+                });
+            
             $extension.find(".titleField").text(extension.title);
             $extension.find(".descriptionField").text(extension.description);
             $extension.find(".versionField").text(extension.version);
+            
+            $extension.find(".updateButton").click(function () {
+                alert("Update is not yet implemented");
+            });
+            $extension.find(".uninstallButton").click(function () {
+                alert("Uninstall is not yet implemented");
+            });
         });
+        
+        $dialog.find(".updateAllButton").click(function () {
+            alert("Update all is not yet implemented");
+        });
+
 
         $dialog
             .appendTo(window.document.body)
@@ -76,7 +102,7 @@ define(function (require, exports, module) {
     }
     
     function _registerShortcut() {
-        var commandId = "diehl.extension_manager.test_modal";
+        var commandId = "i10.extension_manager.test_modal";
         CommandManager.register("Test Modal", commandId, _showManager);
         KeyBindingManager.addBinding(commandId, "Ctrl-Shift-E");
     }
