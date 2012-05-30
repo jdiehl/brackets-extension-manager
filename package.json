@@ -1,0 +1,19 @@
+{
+  "name": "brackets-extension-manager"
+, "description": "Manages Brackets extensions from a central repository"
+, "version": "0.1.0"
+, "scripts": {
+    "start": "nodemon -w . server.js"
+  }
+, "author": "Jonathan Diehl <diehl@cs.rwth-aachen.de>"
+, "repository": {
+    "type": "git"
+  , "url": "git@github.com:jdiehl/brackets-extension-manager.git"
+  }
+, "engines": {
+    "node": "*"
+  }
+, "dependencies": {
+    "websocket": "= 1.0.3"
+  }
+}

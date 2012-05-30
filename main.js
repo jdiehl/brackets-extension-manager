@@ -38,6 +38,9 @@ define(function (require, exports, module) {
         CommandManager          = brackets.getModule("command/CommandManager"),
         KeyBindingManager       = brackets.getModule("command/KeyBindingManager");
 
+    // Extension modules
+    var client = require("client");
+    
     var database    = null;
     var $template   = null;
 
@@ -95,9 +98,11 @@ define(function (require, exports, module) {
         _loadStyle();
         _loadTemplate();
         _registerShortcut();
+        client.send("ExtensionManager", "list", function (res) {
+            console.log(res);
+        });
     }
 
     _loadDatabase();
-    
-    $(init);
+    client.connect(init);
 });
