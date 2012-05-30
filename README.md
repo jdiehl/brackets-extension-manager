@@ -4,7 +4,7 @@ This extension manages Brackets extensions from a central repository.
 
 ## Install
 
-Clone the extension manager into the disbaled extensions folder from Brackets:
+Clone the extension manager into the disabled extensions folder from Brackets:
 
     git clone git://github.com/jdiehl/brackets-extension-manager.git brackets/src/extensions/disabled/ExtensionManager
 
