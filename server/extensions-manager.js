@@ -25,6 +25,7 @@ var pathDisabled = "../../disabled/";
 var pathEnabled = "../../user/";
 
 var fs = require("fs");
+var path = require("path");
 var exec = require('child_process').exec;
 var defer = require("node-promise/promise").defer;
 
@@ -62,6 +63,10 @@ function _extensionWithName(name) {
 	}
 }
 
+function _logError(error) {
+	console.error("\033[1m\033[31m[extensions-manager] " + error + "\033[0m");
+}
+
 // get list of extensions and flag them as uninstalled, installed, or active
 function list() {
 	return extensions;
@@ -70,7 +75,7 @@ function list() {
 // install an extension
 function install(name) {
 	var ext = _extensionWithName(name);
-	if (!ext) throw "Extension " + name + "not found";
+	if (!ext) return _logError("Extension " + name + "not found");
 
 	// clone the extension repository
 	var deferred = defer();
@@ -85,8 +90,13 @@ function install(name) {
 
 // enable an extension
 function enable(name, ext) {
+	if (path.existsSync(pathEnabled + name)) return _logError("Extension " + name + " is already enabled");
+
 	if (!ext) ext = _extensionWithName(name);
-	if (!ext) throw "Extension " + name + "not found";
+	if (!ext) {
+		console.error("Extension " + name + " not found");
+		return;
+	}
 
 	// create link from disabled to enabled
 	fs.symlinkSync("../disabled/" + name, pathEnabled + name);
@@ -95,12 +105,14 @@ function enable(name, ext) {
 
 // disable an extension
 function disable(name, ext) {
+	if (!path.existsSync(pathEnabled + name)) return _logError("Extension " + name + " is not enabled");
+
 	if (!ext) ext = _extensionWithName(name);
-	if (!ext) throw "Extension " + name + "not found";
+	if (!ext) return _logError("Extension " + name + "not found");
 
 	// delete link
 	var stats = fs.lstatSync(pathEnabled + name);
-	if (!stats.isSymbolicLink()) throw "Extension " + name + " is not enabled";
+	if (!stats.isSymbolicLink()) return _logError("Extension " + name + " is not installed as a link");
 	fs.unlinkSync(pathEnabled + name);
 	ext.status = 0;
 }
