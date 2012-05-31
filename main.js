@@ -70,42 +70,32 @@ define(function (require, exports, module) {
             $.each(extensions, function (index, extension) {
                 var $extension = $item.clone().appendTo($extensions);
                 
-                var installed = typeof extension.status !== "undefined";
-                var enabled = extension.status === 1;
-                // Updating not yet supported
-                var uptodate    = true;
-                
                 $extension
-                    .toggleClass("installed", installed)
-                    .toggleClass("enabled", enabled)
-                    .toggleClass("outdated", !uptodate);
+                    .toggleClass("installed", typeof extension.status !== "undefined")
+                    .toggleClass("enabled", extension.status === 1)
+                    // Updating not yet supported
+                    .toggleClass("outdated", false);
                 
                 var $checkbox = $extension
                     .find(".installationCheckbox")
-                    .attr("checked", enabled)
+                    .attr("checked", $extension.is(".enabled"))
                     .change(function () {
                         var enable = this.checked;
                         
-                        $checkbox.attr("disabled", true);
-                        if (installed) {
+                        $extension.find(":input").attr("disabled", true);
+                        if ($extension.is(".installed")) {
                             client[enable ? "enable" : "disable"](extension.name, function () {
-                                enabled = enable;
                                 $extension.toggleClass("enabled", enable);
-                                
-                                $checkbox.attr("disabled", false);
+                                $extension.find(":input").attr("disabled", false);
                             });
                         } else if (enable) {
                             client.install(extension.name, function () {
-                                installed = true;
                                 $extension.addClass("installed");
-                                
-                                enabled = true;
                                 $extension.addClass("enabled");
-                                
-                                $checkbox.attr("disabled", false);
+                                $extension.find(":input").attr("disabled", false);
                             });
                         } else {
-                            $checkbox.attr("disabled", false);
+                            $extension.find(":input").attr("disabled", false);
                         }
                     });
                 
@@ -118,10 +108,7 @@ define(function (require, exports, module) {
                 });
                 $extension.find(".uninstallButton").click(function () {
                     client.uninstall(extension.name, function (res) {
-                        installed = false;
                         $extension.removeClass("installed");
-                        
-                        enabled = false;
                         $extension.removeClass("enabled");
                         $checkbox.attr('checked', false);
                     });
