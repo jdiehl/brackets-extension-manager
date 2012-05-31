@@ -37,14 +37,42 @@ define(function (require, exports, module) {
 
     // Monkey-patch the extension loader
     ExtensionLoader.unloadExtension = function (name, baseUrl, entryPoint) {
-        var extensionRequire = brackets.libRequire.config({
-            context: name,
-            baseUrl: baseUrl
-        });
-
-        console.log("[Extension] unloading " + baseUrl);
+        var libRequire = brackets.libRequire;
         
-        extensionRequire([entryPoint], function () { console.log("[Extension] finished unloading " + baseUrl); });
+        var extensionRequire = libRequire.config({
+            context: name,
+            baseUrl: baseUrl,
+            // GET failing isn't enough for requirejs, it just waits for a timeout
+            // But if there is no unload.js, we don't want to wait a long time
+            waitSeconds: 1
+        });
+        
+        // Evil hack to make requirejs forget it ever loaded this extension
+        var forgetExtension = function () {
+            delete libRequire.s.contexts[name];
+        };
+        
+        var result = new $.Deferred();
+        
+        // Hook into require.js to get some errors.
+        // Would be easier with RequireJS 2.0
+        var originalErrorHandler = libRequire.onError;
+        libRequire.onError = function (err) {
+            libRequire.onError = originalErrorHandler;
+            
+            console.log("[Extension] Error while unloading " + baseUrl + ": " + err.message);
+            forgetExtension();
+            result.reject(err);
+        };
+        
+        console.log("[Extension] unloading " + baseUrl);
+        extensionRequire([entryPoint], function () {
+            console.log("[Extension] finished unloading " + baseUrl);
+            forgetExtension();
+            result.resolve();
+        });
+        
+        return result.promise();
     };
     
     // load an extension
@@ -54,7 +82,7 @@ define(function (require, exports, module) {
 
     // unload an extension
     function _unload(name) {
-        ExtensionLoader.unloadExtension(name, extensionDir + name, "unload");
+        return ExtensionLoader.unloadExtension(name, extensionDir + name, "unload");
     }
 
 
@@ -67,7 +95,16 @@ define(function (require, exports, module) {
     function install(name, callback) {
         client.send(moduleName, "install", name, function (res) {
             _load(name);
-            if (callback) callback();
+            if (callback) { callback(); }
+        });
+    }
+
+    // uninstall an extension
+    function uninstall(name, callback) {
+        disable(name, function() {
+            client.send(moduleName, "uninstall", name, function (res) {
+                if (callback) { callback(); }
+            });
         });
     }
 
@@ -75,14 +112,17 @@ define(function (require, exports, module) {
     function enable(name, callback) {
         client.send(moduleName, "enable", name, function (res) {
             _load(name);
-            if (callback) callback();
+            if (callback) { callback(); }
         });
     }
     
     // disable an extension
     function disable(name, callback) {
-        _unload(name);
-        client.send(moduleName, "disable", name, callback);
+        var fn = function () {
+            client.send(moduleName, "disable", name, callback);
+        };
+        // Wait for unload to complete or fail before disabling
+        _unload(name).done(fn).fail(fn);
     }
     
     // init the extension client
@@ -92,6 +132,7 @@ define(function (require, exports, module) {
 
     exports.list = list;
     exports.install = install;
+    exports.uninstall = uninstall;
     exports.enable = enable;
     exports.disable = disable;
     exports.init = init;

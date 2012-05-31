@@ -42,7 +42,6 @@ define(function (require, exports, module) {
     // Extension modules
     var client = require("extensions-manager-client");
     
-    var database    = null;
     var $template   = null;
 
     function _showManager() {
@@ -50,58 +49,100 @@ define(function (require, exports, module) {
             return;
         }
         
-        var $dialog     = $template.clone(true);
-        var $extensions = $dialog.find(".extensions");
-        var $item       = $extensions.find("div:first").remove();
-        
-        $.each(database, function (index, extension) {
-            var $extension = $item.clone().appendTo($extensions);
+        client.list(function (extensions) {
+            var $dialog = $template.clone(true);
             
-            var enabled     = index === 0;
-            var uptodate    = index === 1;
+            var $tabs = $dialog.find(".tabSwitcher");
+            var $extensions = $dialog.find(".extensions").addClass("installed");
+            var $item = $extensions.find("> div:first").remove();
             
-            $extension
-                .toggleClass("disabled", !enabled)
-                .toggleClass("outdated", !uptodate);
-            
-            $extension
-                .find(".installationCheckbox")
-                .attr("checked", enabled)
-                .change(function () {
-                    $extension.toggleClass("disabled", !this.checked);
-                });
-            
-            $extension.find(".titleField").text(extension.title);
-            $extension.find(".descriptionField").text(extension.description);
-            $extension.find(".versionField").text(extension.version);
-            
-            $extension.find(".updateButton").click(function () {
-                alert("Update is not yet implemented");
+            $tabs.find(".availableTab").click(function () {
+                $tabs.find("li.active").removeClass("active");
+                $(this).closest("li").addClass("active");
+                $extensions.removeClass("installed");
             });
-            $extension.find(".uninstallButton").click(function () {
-                alert("Uninstall is not yet implemented");
+            $tabs.find('.installedTab').click(function () {
+                $tabs.find('li.active').removeClass("active");
+                $(this).closest("li").addClass("active");
+                $extensions.addClass("installed");
             });
-        });
-        
-        $dialog.find(".updateAllButton").click(function () {
-            alert("Update all is not yet implemented");
-        });
 
-        $dialog
-            .appendTo(window.document.body)
-            .modal({
-                backdrop: "static",
-                keyboard: true,
-                show: true
+            $.each(extensions, function (index, extension) {
+                var $extension = $item.clone().appendTo($extensions);
+                
+                var installed = typeof extension.status !== "undefined";
+                var enabled = extension.status === 1;
+                // Updating not yet supported
+                var uptodate    = true;
+                
+                $extension
+                    .toggleClass("installed", installed)
+                    .toggleClass("enabled", enabled)
+                    .toggleClass("outdated", !uptodate);
+                
+                var $checkbox = $extension
+                    .find(".installationCheckbox")
+                    .attr("checked", enabled)
+                    .change(function () {
+                        var enable = this.checked;
+                        
+                        $checkbox.attr("disabled", true);
+                        if (installed) {
+                            client[enable ? "enable" : "disable"](extension.name, function () {
+                                enabled = enable;
+                                $extension.toggleClass("enabled", enable);
+                                
+                                $checkbox.attr("disabled", false);
+                            });
+                        } else if (enable) {
+                            client.install(extension.name, function () {
+                                installed = true;
+                                $extension.addClass("installed");
+                                
+                                enabled = true;
+                                $extension.addClass("enabled");
+                                
+                                $checkbox.attr("disabled", false);
+                            });
+                        } else {
+                            $checkbox.attr("disabled", false);
+                        }
+                    });
+                
+                $extension.find(".titleField").text(extension.title);
+                $extension.find(".descriptionField").text(extension.description);
+                $extension.find(".versionField").text(extension.version);
+                
+                $extension.find(".updateButton").click(function () {
+                    alert("Update is not yet implemented");
+                });
+                $extension.find(".uninstallButton").click(function () {
+                    client.uninstall(extension.name, function (res) {
+                        installed = false;
+                        $extension.removeClass("installed");
+                        
+                        enabled = false;
+                        $extension.removeClass("enabled");
+                        $checkbox.attr('checked', false);
+                    });
+                });
             });
-    }
+            
+            $dialog.find(".modal-footer").hide();
+            $dialog.find(".updateAllButton").attr("disabled", true).click(function () {
+                alert("Update all is not yet implemented");
+            });
     
-    function _loadDatabase() {
-        $.getJSON(extensionManagerDir + "database.json", function (json) {
-            database = json;
+            $dialog
+                .appendTo(window.document.body)
+                .modal({
+                    backdrop: "static",
+                    keyboard: true,
+                    show: true
+                });
         });
     }
-    
+
     function _registerShortcut() {
         var commandId = "i10.extension_manager.test_modal";
         CommandManager.register("Test Modal", commandId, _showManager);
@@ -123,14 +164,12 @@ define(function (require, exports, module) {
     function init() {
         _loadStyle();
         _loadTemplate();
-        _registerShortcut();
 
         client.init(function () {
             // Todo: set up extension manager commands here
-            client.install("markdown");
+            _registerShortcut();
         });
     }
 
-    _loadDatabase();
     $(init);
 });

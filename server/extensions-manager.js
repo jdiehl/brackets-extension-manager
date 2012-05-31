@@ -25,8 +25,9 @@ var pathDisabled = "../../disabled/";
 var pathEnabled = "../../user/";
 
 var fs = require("fs");
+var remove = require("remove");
 var path = require("path");
-var exec = require('child_process').exec;
+var exec = require("child_process").exec;
 var defer = require("node-promise/promise").defer;
 
 // load and flag extensions
@@ -88,6 +89,23 @@ function install(name) {
 	return deferred.promise;
 }
 
+// uninstall an extension
+function uninstall(name) {
+    console.log("Uninstalling "+name);
+	var ext = _extensionWithName(name);
+	if (!ext) return _logError("Extension " + name + "not found");
+
+	var deferred = defer();
+	
+    disable(name);
+    console.log("Deleting dir");
+    remove.removeSync(pathDisabled + name);
+	delete ext.status;
+	deferred.resolve();
+
+	return deferred.promise;
+}
+
 // enable an extension
 function enable(name, ext) {
 	if (path.existsSync(pathEnabled + name)) return _logError("Extension " + name + " is already enabled");
@@ -121,6 +139,7 @@ function disable(name, ext) {
 module.exports = {
 	list: list,
 	install: install,
+	uninstall: uninstall,
 	enable: enable,
 	disable: disable
 };

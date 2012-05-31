@@ -40,28 +40,41 @@
 
 .extensionManager .modal-body {
     padding: 0;
+    min-height: 200px;
     max-height: 500px;
     overflow: auto;
 }
 
+/* Default case: not installed, not enabled */
 .extensionManager .extensions > div {
     position: relative;
     border-bottom: 1px solid #eee;
     padding: 10px 15px;
     padding-left: 40px;
-    background-image: -webkit-linear-gradient(top, #bdf, #69c);
+    background-image: -webkit-linear-gradient(top, #eee, #999);
     min-height: 35px;
 }
 .extensionManager .extensions > div:last-child {
     border-bottom: none;
 }
-
+.extensionManager .extensions.installed > div {
+    display: none;
+}
+.extensionManager .versionField {
+    display: inline-block;
+}
+.extensionManager .updateButton {
+    display: none;
+}
+.extensionManager .uninstallButton {
+    display: none;
+    margin-left: 5px;
+}
 .extensionManager .installationCheckbox {
     position: absolute;
     left: 15px;
     top: 11px
 }
-
 .extensionManager .titleField {
     font-size: large;
 }
@@ -76,26 +89,23 @@
     top: 10px;
 }
 
-/* Default: enabled and up to date */
-.extensionManager .versionField {
-    display: inline-block;
+/* Installed, but not enabled */
+.extensionManager .extensions.installed > div.installed {
+    display: block;
 }
-.extensionManager .updateButton {
-    display: none
+.extensionManager .extensions > div.installed .uninstallButton {
+    display: inline;
 }
-.extensionManager .uninstallButton {
-    margin-left: 5px;
+
+/* Installed and enabled */
+.extensionManager .extensions > div.installed.enabled {
+    background-image: -webkit-linear-gradient(top, #bdf, #69c);
 }
 
 /* Outdated extensions */
-.extensionManager .outdated .updateButton {
+.extensionManager .installed.outdated .updateButton {
     display: inline;
 }
-.extensionManager .outdated .versionField {
+.extensionManager .installed.outdated .versionField {
     display: none;
-}
-
-/* Disabled extensions */
-.extensionManager div.disabled {
-    background-image: -webkit-linear-gradient(top, #eee, #999);
 }
