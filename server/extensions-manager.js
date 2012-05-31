@@ -21,12 +21,12 @@
  *
  */
 
-var pathExtensions = "../../../"
+var pathExtensions = "../../../";
 var pathDisabled = pathExtensions + "disabled/";
 var pathEnabled = pathExtensions + "user/";
 var databaseURL = "../database.json";
 
-var fs = require("fs");
+var fs = require("./fs-extension");
 var path = require("path");
 var exec = require("child_process").exec;
 var defer = require("node-promise/promise").defer;
@@ -98,9 +98,11 @@ function uninstall(name) {
 	var deferred = defer();
 	
     disable(name);
-    fs.unlinkSync(pathDisabled + name);
+    fs.removeRecursive(pathDisabled + name, function (err) {
+		if (err) return deferred.reject(err);
+		deferred.resolve();
+    });
 	delete ext.status;
-	deferred.resolve();
 
 	return deferred.promise;
 }
