@@ -21,11 +21,12 @@
  *
  */
 
-var pathDisabled = "../../disabled/";
-var pathEnabled = "../../user/";
+var pathExtensions = "../../../"
+var pathDisabled = pathExtensions + "disabled/";
+var pathEnabled = pathExtensions + "user/";
+var databaseURL = "../database.json";
 
 var fs = require("fs");
-var remove = require("remove");
 var path = require("path");
 var exec = require("child_process").exec;
 var defer = require("node-promise/promise").defer;
@@ -50,7 +51,7 @@ function _flagExtensions(extensions, index) {
 }
 
 function _loadExtensions() {
-	extensions = JSON.parse(fs.readFileSync("./database.json"));
+	extensions = JSON.parse(fs.readFileSync(databaseURL));
 	var index = {};
 	_indexExtensions(index, fs.readdirSync(pathDisabled), 0); // disabled
 	_indexExtensions(index, fs.readdirSync(pathEnabled), 1);     // enabled
@@ -97,7 +98,7 @@ function uninstall(name) {
 	var deferred = defer();
 	
     disable(name);
-    remove.removeSync(pathDisabled + name);
+    fs.unlinkSync(pathDisabled + name);
 	delete ext.status;
 	deferred.resolve();
 

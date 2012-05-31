@@ -23,12 +23,17 @@
 
 var WebSocketServer = require('ws').Server;
 
+function _logError(error) {
+	console.error("\033[1m\033[31m[server] " + error + "\033[0m");
+}
+
 // set up the web socket server
 var wss = new WebSocketServer({ port:8080 });
 wss.on('connection', function (ws) {
 	ws.on('message', function (message) {
-		try {
+		// try {
 			var messageObj = JSON.parse(message);
+			console.log(messageObj.module + "." + messageObj.method + "(" + messageObj.args.join() + ")");
 			var module = require("./" + messageObj.module);
 			var handler = module[messageObj.method];
 			var response = handler.apply(null, messageObj.args);
@@ -36,13 +41,13 @@ wss.on('connection', function (ws) {
 				response.then(function (response) {
 					ws.send(JSON.stringify({ id: messageObj.id, response: response }));
 				}, function (error) {
-					console.log(error);
+					_logError(error);
 				});
 			} else {
 				ws.send(JSON.stringify({ id: messageObj.id, response: response }));
 			}
-		} catch (err) {
-			console.log(err);
-		}
+		// } catch (error) {
+		// 	_logError(error);
+		// }
 	});
 });
