@@ -91,14 +91,12 @@ function install(name) {
 
 // uninstall an extension
 function uninstall(name) {
-    console.log("Uninstalling "+name);
 	var ext = _extensionWithName(name);
 	if (!ext) return _logError("Extension " + name + "not found");
 
 	var deferred = defer();
 	
     disable(name);
-    console.log("Deleting dir");
     remove.removeSync(pathDisabled + name);
 	delete ext.status;
 	deferred.resolve();
