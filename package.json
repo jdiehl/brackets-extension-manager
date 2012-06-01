@@ -16,6 +16,5 @@
 , "dependencies": {
     "ws": "~ 0.4.15"
   , "node-promise": "~ 0.5.2"
-  , "remove": "~ 0.1.2"
   }
 }
