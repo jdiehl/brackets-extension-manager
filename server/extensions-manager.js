@@ -21,10 +21,10 @@
  *
  */
 
-var pathExtensions = "../../../";
+var pathExtensions = __dirname + "/../../../";
 var pathDisabled = pathExtensions + "disabled/";
 var pathEnabled = pathExtensions + "user/";
-var databaseURL = "../database.json";
+var databaseURL = __dirname + "/../database.json";
 
 var fs = require("./fs-extension");
 var path = require("path");
