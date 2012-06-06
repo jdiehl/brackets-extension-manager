@@ -83,7 +83,7 @@ function install(name) {
 	var deferred = promise.defer();
 	var process = exec("/usr/bin/git clone " + ext.repository.url + " " + pathDisabled + name, function (res) {
 		ext.status = 0;
-		enable(name);
+		enable(name, ext);
 		deferred.resolve();
 	});
 
@@ -97,7 +97,7 @@ function uninstall(name) {
 
 	var deferred = promise.defer();
 	
-    disable(name);
+    if (ext.status === 1) disable(name, ext);
     fs.removeRecursive(pathDisabled + name, function (err) {
 		if (err) return deferred.reject(err);
 		deferred.resolve();
