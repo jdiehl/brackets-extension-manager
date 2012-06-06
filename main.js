@@ -37,21 +37,28 @@ define(function (require, exports, module) {
         Commands                = brackets.getModule("command/Commands"),
         CommandManager          = brackets.getModule("command/CommandManager"),
         KeyBindingManager       = brackets.getModule("command/KeyBindingManager"),
+        Menus                   = brackets.getModule("command/Menus"),
         ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
 
     // Extension modules
     var ui = require("ui");
     
-    function _registerShortcut() {
-        var commandId = "i10.extension_manager.test_modal";
-        CommandManager.register("Test Modal", commandId, ui.show);
-        KeyBindingManager.addBinding(commandId, "Ctrl-Shift-E");
+    function _addMenuEntry() {
+        var commandId = "i10.extension_manager.show";
+        CommandManager.register("Extension Manager", commandId, ui.show);
+        
+        var menuId = "tools-menu";
+        var menu = Menus.getMenu(menuId);
+        if (!menu) {
+            menu = Menus.addMenu("Tools", menuId);
+        }
+        menu.addMenuItem("menu-tools-extension-manager", commandId, "Ctrl-Shift-E");
     }
     
     // Init the UI
     function init() {
         ui.init(function () {
-            _registerShortcut();
+            _addMenuEntry();
         });
     }
 
