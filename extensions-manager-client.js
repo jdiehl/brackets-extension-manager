@@ -102,10 +102,8 @@ define(function (require, exports, module) {
 
     // uninstall an extension
     function uninstall(name, callback) {
-        disable(name, function() {
-            client.send(moduleName, "uninstall", name, function (res) {
-                if (callback) { callback(); }
-            });
+        client.send(moduleName, "uninstall", name, function (res) {
+            if (callback) { callback(); }
         });
     }
 

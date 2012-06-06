@@ -95,11 +95,18 @@ define(function (require, exports, module) {
 		var $extension = $this.parent().parent();
 		var name = $extension.data("name");
 		_preventUserAction($extension, function (release) {
-			client.uninstall(name, function () {
-				$extension.removeClass("installed").removeClass("enabled");
-				$extension.find(".installationCheckbox").attr('checked', false);
-				release();
-			});
+			function runUninstall() {
+				client.uninstall(name, function () {
+					$extension.removeClass("installed").removeClass("enabled");
+					$extension.find(".installationCheckbox").attr('checked', false);
+					release();
+				});
+			}
+			if ($extension.is(".enabled")) {
+				client.disable(name, runUninstall);
+			} else {
+				runUninstall();
+			}
 		});
 	}
 	// change handler: install / enable / disable an extension
