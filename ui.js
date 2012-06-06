@@ -49,10 +49,11 @@ define(function (require, exports, module) {
 
 
 	function _preventUserAction($element, callback) {
+		var $targets = $element.find(":input").andSelf();
 		function release() {
-			$element.find(":input").attr("disabled", false);
+			$targets.attr("disabled", false);
 		}
-		$element.find(":input").attr("disabled", true);
+		$targets.attr("disabled", true);
 		callback(release);
 		if (callback.length === 0) release();
 	}

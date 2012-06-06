@@ -29,7 +29,7 @@ var databaseURL = __dirname + "/../database.json";
 var fs = require("./fs-extension");
 var path = require("path");
 var exec = require("child_process").exec;
-var defer = require("node-promise/promise").defer;
+var promise = require("node-promise/promise");
 
 // load and flag extensions
 var extensions;
@@ -80,7 +80,7 @@ function install(name) {
 	if (!ext) return _logError("Extension " + name + "not found");
 
 	// clone the extension repository
-	var deferred = defer();
+	var deferred = promise.defer();
 	var process = exec("/usr/bin/git clone " + ext.repository.url + " " + pathDisabled + name, function (res) {
 		ext.status = 0;
 		enable(name);
@@ -95,7 +95,7 @@ function uninstall(name) {
 	var ext = _extensionWithName(name);
 	if (!ext) return _logError("Extension " + name + "not found");
 
-	var deferred = defer();
+	var deferred = promise.defer();
 	
     disable(name);
     fs.removeRecursive(pathDisabled + name, function (err) {
@@ -143,7 +143,7 @@ function update(name, ext) {
 	if (ext.status === undefined) return _logError("Extension " + name + " not installed");
 
 	// run git pull
-	var deferred = defer();
+	var deferred = promise.defer();
 	var process = exec("/usr/bin/git pull", {cwd: pathDisabled + name}, function (res) {
 		deferred.resolve();
 	});
@@ -159,7 +159,7 @@ function updateAll() {
 		if (ext.status === undefined) { continue; }
 		promises.push(update(ext.name, ext));
 	}
-	return $.when.apply(null, promises);
+	return promise.all(promises);
 }
 
 // public methods
