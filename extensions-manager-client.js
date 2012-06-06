@@ -125,6 +125,20 @@ define(function (require, exports, module) {
         // Wait for unload to complete or fail before disabling
         _unload(name).done(fn).fail(fn);
     }
+
+    // update an extension
+    function update(name, callback) {
+        client.send(moduleName, "update", name, function (res) {
+            if (callback) { callback(); }
+        });
+    }
+    
+    // update all extensions
+    function updateAll(name, callback) {
+        client.send(moduleName, "updateAll", function (res) {
+            if (callback) { callback(); }
+        });
+    }
     
     // init the extension client
     function init(callback) {
