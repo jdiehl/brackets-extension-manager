@@ -136,11 +136,38 @@ function disable(name, ext) {
 	ext.status = 0;
 }
 
+// update an extension
+function update(name, ext) {
+	if (!path.existsSync(pathEnabled + name)) return _logError("Extension " + name + " is not enabled");
+
+	if (!ext) ext = _extensionWithName(name);
+	if (!ext) return _logError("Extension " + name + "not found");
+
+	// run git pull
+	var deferred = defer();
+	var process = exec("/usr/bin/git pull", {cwd: pathDisabled + name}, function (res) {
+		deferred.resolve();
+	});
+
+	return deferred.promise;
+}
+
+// update an extension
+function updateAll() {
+	var promises = [];
+	for (var i in extensions) {
+		promises.push(update(extensions[i].name, extensions[i]));
+	}
+	return $.when.apply(null, promises);
+}
+
 // public methods
 module.exports = {
 	list: list,
 	install: install,
 	uninstall: uninstall,
 	enable: enable,
-	disable: disable
+	disable: disable,
+	update: update,
+	updateAll: updateAll
 };
