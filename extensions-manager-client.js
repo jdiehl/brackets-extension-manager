@@ -65,7 +65,8 @@ define(function (require, exports, module) {
             result.reject(err);
         };
         
-        console.log("[Extension] unloading " + baseUrl);
+        // Unload the exentions by running unload.js
+        console.log("[Extension] starting to unload " + baseUrl);
         extensionRequire([entryPoint], function () {
             console.log("[Extension] finished unloading " + baseUrl);
             forgetExtension();

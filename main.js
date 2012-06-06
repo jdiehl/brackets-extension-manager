@@ -43,29 +43,36 @@ define(function (require, exports, module) {
     var client = require("extensions-manager-client");
     
     var $template   = null;
+    var $extensions;
+
+    Function.prototype.curry = function (callback) {
+        var args = Array.prototype.splice.call(arguments, 1, 0);
+        return callback.bind(this, args);
+    }
+
+    // click handler: switch between installed and active extensions
+    function _onTabClick() {
+        $this = $(this);
+        $this.siblings().removeClass("active");
+        $this.addClass("active");
+        $extensions.toggleClass("installed", $this.is(".installedTab"));
+    }
 
     function _showManager() {
         if (!$template) {
             return;
         }
-        
+
+        // get the complete list of extensions (installed and available)
         client.list(function (extensions) {
+
+            // create the dialog and find the elements to be customized inside it
             var $dialog = $template.clone(true);
-            
             var $tabs = $dialog.find(".tabSwitcher");
-            var $extensions = $dialog.find(".extensions").addClass("installed");
+            $extensions = $dialog.find(".extensions").addClass("installed");
             var $item = $extensions.find("> div:first").remove();
             
-            $tabs.find(".availableTab").click(function () {
-                $tabs.find("li.active").removeClass("active");
-                $(this).closest("li").addClass("active");
-                $extensions.removeClass("installed");
-            });
-            $tabs.find('.installedTab').click(function () {
-                $tabs.find('li.active').removeClass("active");
-                $(this).closest("li").addClass("active");
-                $extensions.addClass("installed");
-            });
+            $tabs.find(".tabSwitcher li").removeClass("active").click(_onTabClick);
 
             $.each(extensions, function (index, extension) {
                 var $extension = $item.clone().appendTo($extensions);
