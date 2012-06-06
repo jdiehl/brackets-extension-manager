@@ -167,5 +167,7 @@ module.exports = {
 	install: install,
 	uninstall: uninstall,
 	enable: enable,
-	disable: disable
+	disable: disable,
+	update: update,
+	updateAll: updateAll
 };
