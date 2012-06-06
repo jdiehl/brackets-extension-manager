@@ -150,5 +150,7 @@ define(function (require, exports, module) {
     exports.uninstall = uninstall;
     exports.enable = enable;
     exports.disable = disable;
+    exports.update = update;
+    exports.updateAll = updateAll;
     exports.init = init;
 });

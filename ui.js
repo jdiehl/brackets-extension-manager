@@ -67,12 +67,25 @@ define(function (require, exports, module) {
 
 	// click handler: update all
 	function _onUpdateAllClick(event) {
-		alert("Update all is not yet implemented");
+		var $this = $(event.currentTarget);
+		_preventUserAction($this, function (release) {
+			client.updateAll(function () {
+				release();
+			});
+		});
 	}
 
 	// click handler: update
 	function _onUpdateClick(event) {
-		alert("Update is not yet implemented");
+		var $this = $(event.currentTarget);
+		var $extension = $this.parent().parent();
+		var name = $extension.data("name");
+		_preventUserAction($extension, function (release) {
+			client.update(name, function () {
+				//$extension.removeClass("outdated");
+				release();
+			});
+		});
 	}
 
 	// click handler: uninstall
@@ -122,8 +135,8 @@ define(function (require, exports, module) {
 			$extension
 				.toggleClass("installed", typeof extension.status !== "undefined")
 				.toggleClass("enabled", extension.status === 1)
-				// Updating not yet supported
-				.toggleClass("outdated", false);
+				// Updating for now means git pull
+				.toggleClass("outdated", true);
 			
 			// configure the check box
 			$extension.find(".installationCheckbox")
