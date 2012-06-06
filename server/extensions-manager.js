@@ -138,10 +138,9 @@ function disable(name, ext) {
 
 // update an extension
 function update(name, ext) {
-	if (!path.existsSync(pathEnabled + name)) return _logError("Extension " + name + " is not enabled");
-
 	if (!ext) ext = _extensionWithName(name);
-	if (!ext) return _logError("Extension " + name + "not found");
+	if (!ext) return _logError("Extension " + name + " not found");
+	if (ext.status === undefined) return _logError("Extension " + name + " not installed");
 
 	// run git pull
 	var deferred = defer();
@@ -156,7 +155,9 @@ function update(name, ext) {
 function updateAll() {
 	var promises = [];
 	for (var i in extensions) {
-		promises.push(update(extensions[i].name, extensions[i]));
+		var ext = extensions[i];
+		if (ext.status === undefined) { continue; }
+		promises.push(update(ext.name, ext));
 	}
 	return $.when.apply(null, promises);
 }
