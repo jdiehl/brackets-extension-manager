@@ -24,7 +24,7 @@
 var WebSocketServer = require('ws').Server;
 
 function _logError(error) {
-	console.error("\033[1m\033[31m[server] " + error + "\033[0m");
+	console.error("\033[1m\033[31m[server] " + error.stack + "\033[0m");
 }
 
 // set up the web socket server
