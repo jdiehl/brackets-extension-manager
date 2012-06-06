@@ -134,7 +134,7 @@ define(function (require, exports, module) {
     }
     
     // update all extensions
-    function updateAll(name, callback) {
+    function updateAll(callback) {
         client.send(moduleName, "updateAll", function (res) {
             if (callback) { callback(); }
         });
