@@ -1,6 +1,6 @@
 # Brackets Extension Manager
 
-This extension manages Brackets extensions from a central repository.
+This extension manages Brackets extensions from a central repository. It requires a seperate node server.
 
 ## Install
 
@@ -11,6 +11,20 @@ Clone the extension manager into the disabled extensions folder from Brackets:
 Create a link to enable the extension manager:
 
     ln -s brackets/src/extensions/disabled/ExtensionManager brackets/src/extensions/user/ExtensionManager
+
+Install [node.js](http://nodejs.org/) and npm, then install the necessary node modules:
+
+    cd brackets/src/extensions/disabled/ExtensionManager
+    npm install
+
+## Run
+
+First launch the node server:
+
+    cd brackets/src/extensions/disabled/ExtensionManager
+    npm start
+
+Then start Brackets as usual. You can open the extension manager via the Tools menu or by using the shortcut **Ctrl-Shift-E** (**Command-Shift-E** on the Mac).
 
 ## License
 
