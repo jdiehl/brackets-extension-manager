@@ -1,24 +1,92 @@
 [
 	{
-		"name": "ReloadInBrowser",
-		"title": "Reload in Browser",
-		"description": "Adds a toolbar button and shortcut to reload the page in the browser",
-		"version": "0.2",
-		"date": "2012-05-30 11:30:00 GMT+0200",
+		"name": "appcache-buddy",
+		"title": "App Cache Buddy",
+		"description": "A brackets extension to generate & validate application cache manifests",
+		"url": "https://github.com/davidderaedt/appcache-gen",
 		"repository": {
 			"type": "git",
-			"url": "git://github.com/DennisKehrig/brackets.ReloadInBrowser.git"
+			"url": "git://github.com/davidderaedt/appcache-gen.git"
 		}
 	},
 	{
 		"name": "markdown",
 		"title": "Markdown",
 		"description": "Display comment blocks with rendered markdown",
-		"version": "1.0",
-		"date": "2012-05-29 07:00:00 GMT+0200",
+		"url": "https://github.com/jpkraemer/markdown-brackets",
 		"repository": {
 			"type": "git",
 			"url": "git://github.com/jpkraemer/markdown-brackets.git"
+		}
+	},
+	{
+		"name": "MDNLookup-extension",
+		"title": "MDN Lookup",
+		"description": "Look up HTML tags on MDN",
+		"url": "https://github.com/pamelafox/brackets-MDNLookup-extension",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/pamelafox/brackets-MDNLookup-extension.git"
+		}
+	},
+	{
+		"name": "prefixr",
+		"title": "Prefixr",
+		"description": "A small brackets extension to replace the current CSS text selection with the prefixed result returned by Prefixr",
+		"url": "https://github.com/davidderaedt/prefixr-extension",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/davidderaedt/prefixr-extension.git"
+		}
+	},
+	{
+		"name": "recent-projects",
+		"title": "Recent Projects",
+		"description": "Recent projects dropdown extension for Brackets.",
+		"url": "https://github.com/njx/brackets-recent-projects",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/njx/brackets-recent-projects.git"
+		}
+	},
+	{
+		"name": "ReloadInBrowser",
+		"title": "Reload in Browser",
+		"description": "Adds a toolbar button and shortcut to reload the page in the browser",
+		"url": "https://github.com/DennisKehrig/brackets.ReloadInBrowser/",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/DennisKehrig/brackets.ReloadInBrowser.git"
+		}
+	},
+	{
+		"name": "snippets",
+		"title": "Snippets",
+		"description": "A brackets snippets extension",
+		"url": "https://github.com/jrowny/brackets-snippets",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/jrowny/brackets-snippets.git"
+		}
+	},
+	{
+		"name": "StringConvert",
+		"title": "StringConvert",
+		"description": "String conversion extension for the Adobe Brackets Web Editor",
+		"url": "https://github.com/mikechambers/StringConvert",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/mikechambers/StringConvert.git"
+		}
+	},
+	{
+		"name": "togist",
+		"title": "ToGist",
+		"description": "A simple brackets extension to easily create a Github Gist from the current text selection.",
+		"url": "https://github.com/davidderaedt/togist",
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/davidderaedt/togist.git"
 		}
 	}
 ]

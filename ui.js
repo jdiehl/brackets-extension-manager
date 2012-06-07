@@ -153,7 +153,11 @@ define(function (require, exports, module) {
 			// fill the content text
 			$extension.find(".titleField").text(extension.title);
 			$extension.find(".descriptionField").text(extension.description);
-			$extension.find(".versionField").text(extension.version);
+			$extension.find(".versionField").text(extension.version || "");
+			if (extension.url) {
+				var $link = $("<a>").attr({ href: extension.url, target: "_blank" }).text("more…");
+				$extension.find(".descriptionField").append(" - ").append($link);
+			}
 
 			// save the extension name
 			$extension.data("name", extension.name);
