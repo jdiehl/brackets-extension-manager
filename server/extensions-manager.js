@@ -162,6 +162,12 @@ function updateAll() {
 	return promise.all(promises);
 }
 
+// open a URL
+function openUrl(url) {
+	url = url.replace('"', "\\\"");
+	exec('open "' + url + '"');
+}
+
 // public methods
 module.exports = {
 	list: list,
@@ -170,5 +176,6 @@ module.exports = {
 	enable: enable,
 	disable: disable,
 	update: update,
-	updateAll: updateAll
+	updateAll: updateAll,
+	openUrl: openUrl
 };

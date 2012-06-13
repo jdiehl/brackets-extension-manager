@@ -155,7 +155,11 @@ define(function (require, exports, module) {
 			$extension.find(".descriptionField").text(extension.description);
 			$extension.find(".versionField").text(extension.version || "");
 			if (extension.url) {
-				var $link = $("<a>").attr({ href: extension.url, target: "_blank" }).text("more…");
+				var $link = $("<a>").attr({ href: '#' }).text("more…");
+				$link.click(function () {
+					client.openUrl(extension.url);
+					return false;
+				});
 				$extension.find(".descriptionField").append(" - ").append($link);
 			}
 
