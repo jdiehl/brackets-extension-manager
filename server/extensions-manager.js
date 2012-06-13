@@ -146,9 +146,9 @@ function disable(ext, deferred) {
 // update an extension (git pull)
 function update(ext, deferred) {
 	if (ext.status === undefined) {
-		return deferred.reject("Extension " + name + " not installed");
+		return deferred.reject("Extension " + ext.name + " not installed");
 	}
-	var process = exec("/usr/bin/git pull", {cwd: pathDisabled + name}, function (res) {
+	var process = exec("/usr/bin/git pull", {cwd: pathDisabled + ext.name}, function (res) {
 		deferred.resolve();
 	});
 }
