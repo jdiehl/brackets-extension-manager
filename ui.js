@@ -155,13 +155,25 @@ define(function (require, exports, module) {
 			$extension.find(".descriptionField").text(extension.description);
 			$extension.find(".versionField").text(extension.version || "");
 			if (extension.url) {
-				var $link = $("<a>").attr({ href: extension.url, target: "_blank" }).text("more…");
+				var $link = $("<a>").attr({ href: '#' }).text("more…");
+				$link.click(function () {
+					client.openUrl(extension.url);
+					return false;
+				});
 				$extension.find(".descriptionField").append(" - ").append($link);
 			}
 
 			// save the extension name
 			$extension.data("name", extension.name);
 		});
+	}
+
+	// open the tab with available extensions unless there are installed extensions
+	function _processExtensionList(extensions) {
+		_populate(extensions);
+		if ($extensions.children(".installed").length === 0) {
+			$dialog.find('.availableTab').click();
+		}
 	}
 
 	function _reset() {
@@ -200,7 +212,7 @@ define(function (require, exports, module) {
 		if (!_init) return;
 		_reset();
 		$dialog.modal();
-		client.list(_populate);
+		client.list(_processExtensionList);
 	}
 
 	// Init the UI

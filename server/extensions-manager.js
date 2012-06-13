@@ -166,6 +166,12 @@ function updateAll(extensions, deferred) {
 		deferred.reject.bind(null, deferred));
 }
 
+// open a URL
+function openUrl(url) {
+	url = url.replace('"', "\\\"");
+	exec('open "' + url + '"');
+}
+
 // public methods
 module.exports = {
 	list: _wrap(list),
@@ -174,5 +180,6 @@ module.exports = {
 	enable: _wrap(enable),
 	disable: _wrap(disable),
 	update: _wrap(update),
-	updateAll: _wrap(updateAll)
+	updateAll: _wrap(updateAll),
+	openUrl: openUrl
 };

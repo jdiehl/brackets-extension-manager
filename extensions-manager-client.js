@@ -137,6 +137,11 @@ define(function (require, exports, module) {
             if (callback) { callback(); }
         });
     }
+
+    // open a URL
+    function openUrl(url) {
+        client.send(moduleName, "openUrl", url);
+    }
     
     // init the extension client
     function init(callback) {
@@ -150,5 +155,6 @@ define(function (require, exports, module) {
     exports.disable = disable;
     exports.update = update;
     exports.updateAll = updateAll;
+    exports.openUrl = openUrl;
     exports.init = init;
 });
