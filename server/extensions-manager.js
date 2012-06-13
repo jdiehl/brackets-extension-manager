@@ -81,19 +81,21 @@ function _loadExtensions(reload) {
 	return deferred;
 }
 
-function _wrap(method, name) {
-	var deferred = promise.defer();
-	_loadExtensions().then(function (res) {
-		if (name) {
-			res = res[name];
-			if (!res) return promise.reject("Extension " + name + "not found.");
-		}
-		res = method(res, deferred);
-		if (method.length < 2) {
-			deferred.resolve(res);
-		}
-	}, deferred.reject.bind(null, deferred));
-	return deferred;
+function _wrap(method) {
+	return function(name) {
+		var deferred = promise.defer();
+		_loadExtensions().then(function (res) {
+			if (name) {
+				res = res[name];
+				if (!res) return promise.reject("Extension " + name + "not found.");
+			}
+			res = method(res, deferred);
+			if (method.length < 2) {
+				deferred.resolve(res);
+			}
+		}, deferred.reject.bind(null, deferred));
+		return deferred;
+	};
 }
 
 // get list of extensions and flag them as uninstalled, installed, or active
