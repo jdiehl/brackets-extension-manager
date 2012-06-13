@@ -168,6 +168,14 @@ define(function (require, exports, module) {
 		});
 	}
 
+	// open the tab with available extensions unless there are installed extensions
+	function _processExtensionList(extensions) {
+		_populate(extensions);
+		if ($extensions.children(".installed").length === 0) {
+			$dialog.find('.availableTab').click();
+		}
+	}
+
 	function _reset() {
 		$dialog.find(".tabSwitcher li").removeClass("active").first().click();
 		$extensions.children().remove();
@@ -204,7 +212,7 @@ define(function (require, exports, module) {
 		if (!_init) return;
 		_reset();
 		$dialog.modal();
-		client.list(_populate);
+		client.list(_processExtensionList);
 	}
 
 	// Init the UI
