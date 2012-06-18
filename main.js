@@ -52,7 +52,16 @@ define(function (require, exports, module) {
         if (!menu) {
             menu = Menus.addMenu("Tools", menuId);
         }
-        menu.addMenuItem("menu-tools-extension-manager", commandId, "Ctrl-Shift-E");
+        
+        var args = [commandId, "Ctrl-Shift-E"];
+        try {
+            menu.addMenuItem.apply(menu, args);
+        } catch (err) {
+            // Backwards compatibility: first parameter of addMenuItem was an id, prior to commit ea3d26f
+            console.log("Using addMenuItem() the old way");
+            args.unshift("menu-tools-extension-manager");
+            menu.addMenuItem.apply(menu, args);
+        }
     }
     
     // Init the UI
