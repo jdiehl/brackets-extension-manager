@@ -36,13 +36,13 @@ define(function (require, exports, module) {
     var client = require("client");
 
     // Monkey-patch the extension loader
-    ExtensionLoader.unloadExtension = function (name, baseUrl, entryPoint) {
-        console.log("[Extension] Unloading " + name + " (in " + baseUrl + ")");
+    ExtensionLoader.unloadExtension = function (name, config, entryPoint) {
+        console.log("[Extension] Unloading " + name + " (in " + config.baseUrl + ")");
         var libRequire = brackets.libRequire;
         
         var extensionRequire = libRequire.config({
             context: name,
-            baseUrl: baseUrl,
+            baseUrl: config.baseUrl,
             // GET failing isn't enough for requirejs, it just waits for a timeout
             // But if there is no unload.js, we don't want to wait a long time
             waitSeconds: 1
@@ -109,7 +109,7 @@ define(function (require, exports, module) {
 
     // unload an extension
     function _unload(name) {
-        return ExtensionLoader.unloadExtension(name, extensionDir + name, "unload");
+        return ExtensionLoader.unloadExtension(name, { baseUrl: extensionDir + name }, "unload");
     }
 
 
