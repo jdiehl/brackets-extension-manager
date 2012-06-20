@@ -104,7 +104,7 @@ define(function (require, exports, module) {
     
     // load an extension
     function _load(name) {
-        ExtensionLoader.loadExtension(name, extensionDir + name, "main");
+        ExtensionLoader.loadExtension(name, { baseUrl: extensionDir + name }, "main");
     }
 
     // unload an extension
