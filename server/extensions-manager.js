@@ -124,7 +124,15 @@ function uninstall(ext, deferred) {
 // enable an extension (create link)
 function enable(ext, deferred) {
 	if (!path.existsSync(pathEnabled + ext.name)) {
-		fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name, "dir");
+		// Running on Windows with Node 0.7 or later
+		if (process.platform === 'win32' && ! process.version.match(/^v0\.[0-6](\.|$)/)) {
+			// using a junction for Windows XP support -> target path must be absolute
+			var target = fs.realpathSync(pathDisabled + ext.name);
+			fs.symlinkSync(target, pathEnabled + ext.name, "junction");
+		} else {
+			// Using Unix symlink semantics, with a directory hint for Windows (the latter is untested)
+			fs.symlinkSync(target, pathEnabled + ext.name, "dir");
+		}
 	}
 	ext.status = 1;
 	deferred.resolve();
