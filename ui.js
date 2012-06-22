@@ -27,10 +27,6 @@
 define(function (require, exports, module) {
 	'use strict';
 
-	// Sadly hardcoded for now
-	var extensionDir = "extensions/user/";
-	var extensionManagerDir = extensionDir + "ExtensionManager/";
-	
 	// Brackets modules
 	var EditorManager           = brackets.getModule("editor/EditorManager"),
 		ProjectManager          = brackets.getModule("project/ProjectManager"),
@@ -182,11 +178,11 @@ define(function (require, exports, module) {
 	}
 
 	function _loadStyle() {
-		$("<link rel='stylesheet' type='text/css'>").attr("href", extensionManagerDir + "ui.css").appendTo(window.document.head);
+		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("ui.css")).appendTo(window.document.head);
 	}
 		
 	function _loadTemplate(callback) {
-		$.get(extensionManagerDir + "ui.html", callback);
+		$.get(require.toUrl("ui.html"), callback);
 	}
 
 	function _setupTemplate(template) {

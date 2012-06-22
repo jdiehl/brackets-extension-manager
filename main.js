@@ -27,10 +27,6 @@
 define(function (require, exports, module) {
     'use strict';
 
-    // Sadly hardcoded for now
-    var extensionDir = "extensions/user/";
-    var extensionManagerDir = extensionDir + "ExtensionManager/";
-    
     // Brackets modules
     var EditorManager           = brackets.getModule("editor/EditorManager"),
         ProjectManager          = brackets.getModule("project/ProjectManager"),
