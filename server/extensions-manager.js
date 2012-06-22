@@ -105,7 +105,7 @@ function list(extensions) {
 
 // install an extension (git clone)
 function install(ext, deferred) {
-	var process = exec("/usr/bin/git clone " + ext.repository.url + " " + pathDisabled + ext.name, function (res) {
+	var process = exec("git clone " + ext.repository.url + " " + pathDisabled + ext.name, function (res) {
 		ext.status = 0;
 		enable(ext, deferred);
 	});
