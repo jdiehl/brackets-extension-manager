@@ -131,7 +131,7 @@ function enable(ext, deferred) {
 			fs.symlinkSync(target, pathEnabled + ext.name, "junction");
 		} else {
 			// Using Unix symlink semantics, with a directory hint for Windows (the latter is untested)
-			fs.symlinkSync(target, pathEnabled + ext.name, "dir");
+			fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name, "dir");
 		}
 	}
 	ext.status = 1;
