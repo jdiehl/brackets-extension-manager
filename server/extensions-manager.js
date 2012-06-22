@@ -124,7 +124,7 @@ function uninstall(ext, deferred) {
 // enable an extension (create link)
 function enable(ext, deferred) {
 	if (!path.existsSync(pathEnabled + ext.name)) {
-		fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name);
+		fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name, "dir");
 	}
 	ext.status = 1;
 	deferred.resolve();
