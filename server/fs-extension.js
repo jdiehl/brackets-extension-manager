@@ -1,5 +1,7 @@
 var fs = require("fs");
 
+var onWindows = process.platform === 'win32';
+
 fs.removeRecursive = function(path,cb){
     var self = this;
 
@@ -9,6 +11,14 @@ fs.removeRecursive = function(path,cb){
         return;
       }
       if(stats.isFile()){
+        // Fix: On Windows, unlink fails for files that are read-only
+        if (onWindows) {
+          // If file is read-only for the owner
+          if (! (stats.mode & 0200)) {
+            // Make it writable for the owner
+            fs.chmodSync(path, stats.mode | 0200);
+          }
+        }
         fs.unlink(path, function(err) {
           if(err) {
             cb(err,null);
