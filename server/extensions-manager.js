@@ -124,7 +124,14 @@ function uninstall(ext, deferred) {
 // enable an extension (create link)
 function enable(ext, deferred) {
 	if (!path.existsSync(pathEnabled + ext.name)) {
-		fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name, "dir");
+		if (process.platform === 'win32') {
+			// using a junction for Windows XP support -> target path must be absolute
+			var target = fs.realpathSync(pathDisabled + ext.name);
+			fs.symlinkSync(target, pathEnabled + ext.name, "junction");
+		} else {
+			// Using Unix symlink semantics
+			fs.symlinkSync("../disabled/" + ext.name, pathEnabled + ext.name);
+		}
 	}
 	ext.status = 1;
 	deferred.resolve();
