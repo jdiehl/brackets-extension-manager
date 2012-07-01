@@ -39,7 +39,10 @@ define(function (require, exports, module) {
 	var client = require("extensionManagerClient");
 	
 	var _init = false;
+	var _extensions;
+	var _filter;
 	var $dialog,
+		$dialogFilter,
 		$dialogBody,
 		$loading,
 		$extensions,
@@ -132,9 +135,26 @@ define(function (require, exports, module) {
 		});
 	}
 
+	// filter changed
+	function _onFilterUpdate(event) {
+		var newFilter = $dialogFilter.val();
+		if (newFilter !== _filter) {
+			_filter = newFilter;
+			_populate();
+		}
+	}
+
 	// populate the dialog with extensions
-	function _populate(extensions) {
-		$.each(extensions, function (index, extension) {
+	function _populate() {
+		$extensions.children().remove();
+		$.each(_extensions, function (index, extension) {
+
+			// filter
+			if (_filter && extension.title.toLowerCase().search(_filter.toLowerCase()) < 0) {
+				return;
+			}
+
+			// create the item
 			var $extension = $item.clone().appendTo($extensions);
 			
 			// configure the css classes
@@ -166,21 +186,6 @@ define(function (require, exports, module) {
 		});
 	}
 
-	// open the tab with available extensions unless there are installed extensions
-	function _processExtensionList(extensions) {
-		$loading.hide();
-		_populate(extensions);
-		if ($extensions.children(".installed").length === 0) {
-			$dialog.find('.availableTab').click();
-		}
-	}
-
-	function _reset() {
-		$dialog.find(".tabSwitcher li").removeClass("active").first().click();
-		$loading.show();
-		$extensions.children().remove();
-	}
-
 	function _loadStyle() {
 		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("extensionManager.css")).appendTo(window.document.head);
 	}
@@ -192,6 +197,7 @@ define(function (require, exports, module) {
 	function _setupTemplate(template) {
 		// Append template to a DIV to make .find() work
 		$dialog = $("<div>").append(template).find(".modal");
+		$dialogFilter = $dialog.find(".filter");
 		$dialogBody = $dialog.find(".modal-body");
 		$loading = $dialogBody.find(".loading");
 		$extensions = $dialogBody.find(".extensions").addClass("installed");
@@ -203,18 +209,53 @@ define(function (require, exports, module) {
 		$extensions.on("click", ".updateButton", _onUpdateClick);
 		$extensions.on("click", ".uninstallButton", _onUninstallClick);
 		$extensions.on("change", ".installationCheckbox", _onExtensionChange);
+		$dialogFilter.on("keyup", _onFilterUpdate);
 
 		// add to DOM
 		$dialog.hide().appendTo(window.document.body);
 		$dialog.modal({ backdrop: "static", keyboard: true, show: false });
 	}
 
+	function _countExtensions() {
+		var count = 0, installed = 0, active = 0;
+		$.each(_extensions, function (i, ext) {
+			count++;
+			if (ext.status > 0) installed++;
+			if (ext.status > 1) active++;
+		});
+		return { count: count, installed: installed, active: active };
+	}
+
 	// reset, show, and populate the dialog
 	function show() {
 		if (!_init) return;
-		_reset();
+
+		// reset the dialog
+		$dialog.find(".tabSwitcher li").removeClass("active");
+		$extensions.children().remove();
+		_filter = null;
+		$dialogFilter.val("");
+
+		// make the dialog modal
 		$dialog.modal();
-		client.list(_processExtensionList);
+
+		// load the extensions
+		$loading.show();
+		client.list(function (res) {
+			$loading.hide();
+			_extensions = res;
+
+			// populate the extensions
+			_populate();
+
+			// count extensions
+			var info = _countExtensions();
+			if (info.installed === 0) {
+				$dialog.find('.availableTab').click();
+			} else {
+				$dialog.find(".installedTab").click();
+			}
+		});
 	}
 
 	// Init the UI
