@@ -36,10 +36,12 @@ define(function (require, exports, module) {
 		ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
 
 	// Extension modules
-	var client = require("extensions-manager-client");
+	var client = require("extensionManagerClient");
 	
 	var _init = false;
 	var $dialog,
+		$dialogBody,
+		$loading,
 		$extensions,
 		$item;
 
@@ -166,6 +168,7 @@ define(function (require, exports, module) {
 
 	// open the tab with available extensions unless there are installed extensions
 	function _processExtensionList(extensions) {
+		$loading.hide();
 		_populate(extensions);
 		if ($extensions.children(".installed").length === 0) {
 			$dialog.find('.availableTab').click();
@@ -174,21 +177,24 @@ define(function (require, exports, module) {
 
 	function _reset() {
 		$dialog.find(".tabSwitcher li").removeClass("active").first().click();
+		$loading.show();
 		$extensions.children().remove();
 	}
 
 	function _loadStyle() {
-		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("ui.css")).appendTo(window.document.head);
+		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("extensionManager.css")).appendTo(window.document.head);
 	}
 		
 	function _loadTemplate(callback) {
-		$.get(require.toUrl("ui.html"), callback);
+		$.get(require.toUrl("extensionManager.html"), callback);
 	}
 
 	function _setupTemplate(template) {
 		// Append template to a DIV to make .find() work
 		$dialog = $("<div>").append(template).find(".modal");
-		$extensions = $dialog.find(".extensions").addClass("installed");
+		$dialogBody = $dialog.find(".modal-body");
+		$loading = $dialogBody.find(".loading");
+		$extensions = $dialogBody.find(".extensions").addClass("installed");
 		$item = $extensions.find("> div:first").remove();
 
 		// set up the click handlers

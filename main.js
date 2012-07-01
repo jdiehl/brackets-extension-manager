@@ -37,11 +37,11 @@ define(function (require, exports, module) {
         ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
 
     // Extension modules
-    var ui = require("ui");
+    var extensionManager = require("extensionManager");
     
     function _addMenuEntry() {
         var commandId = "i10.extension_manager.show";
-        CommandManager.register("Extension Manager", commandId, ui.show);
+        CommandManager.register("Extension Manager", commandId, extensionManager.show);
         
         var menuId = "tools-menu";
         var menu = Menus.getMenu(menuId);
@@ -62,7 +62,7 @@ define(function (require, exports, module) {
     
     // Init the UI
     function init() {
-        ui.init(function () {
+        extensionManager.init(function () {
             _addMenuEntry();
         });
     }

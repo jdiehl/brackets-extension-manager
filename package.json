@@ -3,7 +3,7 @@
 , "description": "Manages Brackets extensions from a central repository"
 , "version": "0.1.0"
 , "scripts": {
-    "start": "nodemon -w server/ server"
+    "start": "node server"
   }
 , "author": "Jonathan Diehl <diehl@cs.rwth-aachen.de>"
 , "repository": {

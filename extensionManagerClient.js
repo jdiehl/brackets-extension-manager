@@ -29,7 +29,7 @@ define(function (require, exports, module) {
 
     // The extensions folder
     var extensionDir = "extensions/user/";
-    var moduleName = "extensions-manager";
+    var moduleName = "extension-manager";
 
     // Brackets modules
     var ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");

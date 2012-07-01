@@ -43,6 +43,13 @@
     height: 400px;
     overflow: auto;
 }
+.extensionManager .modal-body .loading {
+    padding: 175px 0;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+}
 
 /* Default case: not installed, not enabled */
 .extensionManager .extensions > div {
