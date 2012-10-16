@@ -42,6 +42,7 @@
     padding: 0;
     height: 400px;
     overflow: auto;
+    width: 590px;
 }
 .extensionManager .modal-body .loading {
     padding: 175px 0;
