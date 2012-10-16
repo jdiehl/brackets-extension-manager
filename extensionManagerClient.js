@@ -38,25 +38,15 @@ define(function (require, exports, module) {
     // Monkey-patch the extension loader
     ExtensionLoader.unloadExtension = function (name, config, entryPoint) {
         console.log("[Extension] Unloading " + name + " (in " + config.baseUrl + ")");
-        var libRequire = brackets.libRequire;
-        
-        var extensionRequire = libRequire.config({
-            context: name,
-            baseUrl: config.baseUrl,
-            // GET failing isn't enough for requirejs, it just waits for a timeout
-            // But if there is no unload.js, we don't want to wait a long time
-            waitSeconds: 1
-        });
-        
-        // Evil hack to make requirejs forget it ever loaded this extension
-        var forgetExtension = function () {
-            delete libRequire.s.contexts[name];
-        };
         
         var result = new $.Deferred();
+
+        // Hack: Get the loaded module
+        var module = brackets.libRequire.s.contexts[name].defined.main;
         
         function moduleUnloaded(err) {
-            forgetExtension();
+            // Hack: Make require.js forget it ever loaded this extension
+            delete brackets.libRequire.s.contexts[name];
             if (err) {
                 console.log("[Extension] Error while unloading " + name + ": " + err.message);
                 result.reject(err);
@@ -65,8 +55,6 @@ define(function (require, exports, module) {
                 result.resolve();
             }
         }
-        
-        var module = libRequire.s.contexts[name].defined.main;
         
         if (module && module.unload) {
             console.log("[Extension] Unloading " + name + " with its module's unload method");
@@ -84,19 +72,7 @@ define(function (require, exports, module) {
             }
         }
         else {
-            console.log("[Extension] Unloading " + name + " by requiring its unload.js");
-            // Hook into require.js to get some errors.
-            // Would be easier with RequireJS 2.0
-            var originalErrorHandler = libRequire.onError;
-            libRequire.onError = function (err) {
-                libRequire.onError = originalErrorHandler;
-                moduleUnloaded(err);
-            };
-            
-            // Require unload.js
-            extensionRequire([entryPoint], function () {
-                moduleUnloaded();
-            });
+            moduleUnloaded(new Error("Module did not provide an unload() method"));
         }
         
         return result.promise();
