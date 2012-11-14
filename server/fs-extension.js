@@ -38,7 +38,6 @@ if (onWindows) {
 		var original = fs[methodName];
 		fs[methodName] = function(target, source) {
 			var args = Array.prototype.slice.call(arguments);
-			console.log(args);
 
 			// Get the directory that will contain the link
 			var linkDirectory = paths.dirname(paths.normalize(source));
