@@ -24,7 +24,6 @@
 var fs = require("./fs-extension");
 var paths = require("path");
 var http = require("http");
-var path = require("path");
 var spawn = require("child_process").spawn;
 var promise = require("node-promise/promise");
 
@@ -120,7 +119,7 @@ function enable(ext, deferred) {
 // disable an extension
 function disable(ext, deferred) {
 	"use strict";
-	if (path.existsSync(pathEnabled + ext.name)) {
+	if (fs.existsSync(pathEnabled + ext.name)) {
 		var stats = fs.lstatSync(pathEnabled + ext.name);
 		if (!stats.isSymbolicLink()) {
 			return deferred.reject("Cannot disable extension " + ext.name + ": not installed as symbolic link");
