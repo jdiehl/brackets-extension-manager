@@ -27,14 +27,16 @@
 define(function (require, exports, module) {
     'use strict';
 
-    // The extensions folder
-    var extensionDir = "extensions/user/";
-    var moduleName = "extension-manager";
-
     // Brackets modules
-    var ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
+    var ExtensionLoader = brackets.getModule("utils/ExtensionLoader");
+    
+    // Our modules
     var client = require("client");
 
+    // The extensions folder
+    var extensionDir = ExtensionLoader.getUserExtensionPath() + "/";
+    var moduleName = "extension-manager";
+    
     // Monkey-patch the extension loader
     ExtensionLoader.unloadExtension = function (name, config, entryPoint) {
         console.log("[Extension] Unloading " + name + " (in " + config.baseUrl + ")");

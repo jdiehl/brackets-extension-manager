@@ -21,16 +21,17 @@
  *
  */
 
-var pathExtensions = __dirname + "/../../../";
-var pathDisabled = pathExtensions + "disabled/";
-var pathEnabled = pathExtensions + "user/";
-var databaseURL = { host: "jdiehl.github.com", path: "/extensions.json" };
-
 var fs = require("./fs-extension");
+var paths = require("path");
 var http = require("http");
 var path = require("path");
-var exec = require("child_process").exec;
+var spawn = require("child_process").spawn;
 var promise = require("node-promise/promise");
+
+var pathExtensions = fs.realpathSync(__dirname + "/../../../") + paths.sep;
+var pathDisabled = pathExtensions + "disabled" + paths.sep;
+var pathEnabled = pathExtensions + "user" + paths.sep;
+var databaseURL = { host: "jdiehl.github.com", path: "/extensions.json" };
 
 // index an array
 function _makeIndex(array, indexField) {
@@ -133,7 +134,7 @@ function disable(ext, deferred) {
 // install an extension (git clone)
 function install(ext, deferred) {
 	"use strict";
-	var process = exec("git clone " + ext.repository.url + " " + pathDisabled + ext.name, function (res) {
+	spawn("git", ["clone", ext.repository.url, pathDisabled + ext.name]).on("exit", function (code) {
 		ext.status = 0;
 		enable(ext, deferred);
 	});
@@ -156,7 +157,7 @@ function update(ext, deferred) {
 	if (ext.status === undefined) {
 		return deferred.reject("Extension " + ext.name + " not installed");
 	}
-	var process = exec("/usr/bin/git pull", {cwd: pathDisabled + ext.name}, function (res) {
+	spawn("git", ["pull"], {cwd: pathDisabled + ext.name}).on("exit", function (code) {
 		deferred.resolve();
 	});
 }
@@ -180,8 +181,14 @@ function updateAll(extensions, deferred) {
 // open a URL
 function openUrl(url) {
 	"use strict";
-	url = url.replace('"', "\\\"");
-	exec('open "' + url + '"');
+	if (process.platform === "win32") {
+		spawn("cmd", ["/c", "start", url]);
+	} else if (process.platform === "darwin") {
+		spawn("open", [url]);
+	} else {
+		// http://www.dwheeler.com/essays/open-files-urls.html
+		spawn("xdg-open", [url]);
+	}
 }
 
 // public methods

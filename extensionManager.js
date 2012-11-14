@@ -186,12 +186,20 @@ define(function (require, exports, module) {
 		});
 	}
 
+	/** Find the URL to this extension's directory */
+	function _extensionDirUrl() {
+		var url = brackets.platform === "win" ? "file:///" : "file://localhost";
+		url += require.toUrl("./").replace(/\.\/$/, "");
+		
+		return url;
+	}
+
 	function _loadStyle() {
 		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("extensionManager.css")).appendTo(window.document.head);
 	}
 		
 	function _loadTemplate(callback) {
-		$.get(require.toUrl("extensionManager.html"), callback);
+		$.get(_extensionDirUrl() + "extensionManager.html", callback);
 	}
 
 	function _setupTemplate(template) {
