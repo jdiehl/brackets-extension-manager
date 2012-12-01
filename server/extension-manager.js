@@ -27,6 +27,7 @@ var http = require("http");
 var spawn = require("child_process").spawn;
 var promise = require("node-promise/promise");
 
+var gitCommand = process.platform === "win32" ? "git.cmd" : "git";
 var pathExtensions = fs.realpathSync(__dirname + "/../../../") + paths.sep;
 var pathDisabled = pathExtensions + "disabled" + paths.sep;
 var pathEnabled = pathExtensions + "user" + paths.sep;
@@ -133,7 +134,7 @@ function disable(ext, deferred) {
 // install an extension (git clone)
 function install(ext, deferred) {
 	"use strict";
-	spawn("git", ["clone", ext.repository.url, pathDisabled + ext.name]).on("exit", function (code) {
+	spawn(gitCommand, ["clone", ext.repository.url, pathDisabled + ext.name]).on("exit", function (code) {
 		ext.status = 0;
 		enable(ext, deferred);
 	});
@@ -156,7 +157,7 @@ function update(ext, deferred) {
 	if (ext.status === undefined) {
 		return deferred.reject("Extension " + ext.name + " not installed");
 	}
-	spawn("git", ["pull"], {cwd: pathDisabled + ext.name}).on("exit", function (code) {
+	spawn(gitCommand, ["pull"], {cwd: pathDisabled + ext.name}).on("exit", function (code) {
 		deferred.resolve();
 	});
 }
