@@ -4,34 +4,36 @@ This extension manages Brackets extensions from a central repository. It require
 
 ## Install
 
-Clone the extension manager into the disabled extensions folder from Brackets:
+- Install [Node.js](http://nodejs.org/) and npm
+- In Brackets, click on Help > Show Extensions Folder
+- Open the `user` folder
+- Open a shell and navigate to that folder
+- Clone the extension manager:
 
-    git clone git://github.com/jdiehl/brackets-extension-manager.git brackets/src/extensions/disabled/ExtensionManager
+        git clone git://github.com/jdiehl/brackets-extension-manager.git extension-manager
 
-Create a link to enable the extension manager:
+- Install the necessary node modules
 
-    ln -s brackets/src/extensions/disabled/ExtensionManager brackets/src/extensions/user/ExtensionManager
-
-Install [Node.js](http://nodejs.org/) and npm, then install the necessary node modules:
-
-    cd brackets/src/extensions/disabled/ExtensionManager
-    npm install
-
+        cd extension-manager
+        npm install
+    
 ## Run
 
-First launch the [Node.js](http://nodejs.org/) server:
+- Open a shell in the extension manager folder
+- Run the [Node.js](http://nodejs.org/) server:
 
-    cd brackets/src/extensions/disabled/ExtensionManager
-    node server
+        node server
 
-Then start Brackets as usual. You can open the extension manager via the Tools menu or by using the shortcut **Ctrl-Shift-E** (**Command-Shift-E** on the Mac).
+- Start Brackets
+
+Open the extension manager via the Tools menu or by using the shortcut **Ctrl-Shift-E** (**Command-Shift-E** on the Mac).
 
 ## Compatibility
 
 Combinations known to work:
 
 - Mac OS X 10.7 and Node.js 0.6
-- Windows XP SP3 and Node.js 0.7.12 ([available here](http://blog.nodejs.org/2012/06/19/version-0-7-12/))
+- Windows XP SP3 and Node.js 0.8
 
 Please contact us for results with different combinations - working or not!
 
