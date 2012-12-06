@@ -246,7 +246,9 @@
 
 		testExecutables(gitExecutables, ["--version"], function (executable) {
 			if (! executable) {
-				deferred.reject("Could not find a git executable, tried " + gitExecutables.join(", "));
+				var error = "Could not find a git executable, tried " + gitExecutables.join(", ");
+				console.error(error);
+				deferred.reject(error);
 			} else {
 				gitExecutable = executable;
 				deferred.resolve(gitExecutable);
