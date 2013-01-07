@@ -33,7 +33,8 @@ define(function (require, exports, module) {
 		Commands                = brackets.getModule("command/Commands"),
 		CommandManager          = brackets.getModule("command/CommandManager"),
 		KeyBindingManager       = brackets.getModule("command/KeyBindingManager"),
-		ExtensionLoader         = brackets.getModule("utils/ExtensionLoader");
+		ExtensionLoader         = brackets.getModule("utils/ExtensionLoader"),
+		ExtensionUtils          = brackets.getModule("utils/ExtensionUtils");
 
 	// Extension modules
 	var client = require("extensionManagerClient");
@@ -186,22 +187,6 @@ define(function (require, exports, module) {
 		});
 	}
 
-	/** Find the URL to this extension's directory */
-	function _extensionDirUrl() {
-		var url = brackets.platform === "win" ? "file:///" : "file://localhost";
-		url += require.toUrl("./").replace(/\.\/$/, "");
-		
-		return url;
-	}
-
-	function _loadStyle() {
-		$("<link rel='stylesheet' type='text/css'>").attr("href", require.toUrl("extensionManager.css")).appendTo(window.document.head);
-	}
-		
-	function _loadTemplate(callback) {
-		$.get(_extensionDirUrl() + "extensionManager.html", callback);
-	}
-
 	function _setupTemplate(template) {
 		// Append template to a DIV to make .find() work
 		$dialog = $("<div>").append(template).find(".modal");
@@ -270,8 +255,8 @@ define(function (require, exports, module) {
 	function init(callback) {
         $(function () {
 			client.init(function () {
-				_loadStyle();
-				_loadTemplate(function (template) {
+				ExtensionUtils.addLinkedStyleSheet(ExtensionUtils.getModuleUrl(module, "extensionManager.css"));
+				ExtensionUtils.loadFile(module, "extensionManager.html").done(function (template) {
 					_setupTemplate(template);
 					_init = true;
 					callback();
