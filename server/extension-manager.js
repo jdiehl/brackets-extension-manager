@@ -30,9 +30,19 @@
 	var spawn = require("child_process").spawn;
 	var promise = require("node-promise/promise");
 
-	var pathExtensions = fs.realpathSync(__dirname + "/../../../") + paths.sep;
-	var pathDisabled = pathExtensions + "disabled" + paths.sep;
-	var pathEnabled = pathExtensions + "user" + paths.sep;
+	var pathExtensions;
+	if (process.platform == "win32") {
+	    // Windows: C:\Users\<user>\AppData\Roaming\Brackets\extensions\user on windows.
+		pathExtensions = paths.join(process.env["USERPROFILE"], "AppData", "Roaming", "Brackets", "extensions");
+	} else {
+	    // Mac/Linux: /Users/<user>/Application Support/Brackets/extensions/user on the mac, and
+		pathExtensions = paths.join(process.env["HOME"], "Library", "Application Support", "Brackets", "extensions");
+	}
+	
+	var pathDisabled = paths.join(pathExtensions, "disabled") + paths.sep;
+	var pathEnabled = paths.join(pathExtensions, "user") + paths.sep;
+
+
 	var databaseURL = { host: "jdiehl.github.com", path: "/extensions.json" };
 
 	// Git executables to consider
