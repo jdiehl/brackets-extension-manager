@@ -43,7 +43,7 @@
 	var pathEnabled = paths.join(pathExtensions, "user") + paths.sep;
 
 
-	var databaseURL = { host: "jdiehl.github.com", path: "/extensions.json" };
+	var databaseURL = { host: "jdiehl.github.io", path: "/extensions.json" };
 
 	// Git executables to consider
 	var gitExecutables = ["git"];
