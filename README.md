@@ -1,6 +1,8 @@
 # Brackets Extension Manager
 
-This extension manages Brackets extensions from a central repository. It requires a seperate [Node.js](http://nodejs.org/) server.
+The Brackets Extension Manager is deprecated -- please use the built-in extension manager
+
+~~This extension manages Brackets extensions from a central repository. It requires a seperate [Node.js](http://nodejs.org/) server.~~
 
 ## Install
 
