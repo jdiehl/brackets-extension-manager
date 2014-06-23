@@ -4,41 +4,6 @@ The Brackets Extension Manager is deprecated -- please use the built-in extensio
 
 ~~This extension manages Brackets extensions from a central repository. It requires a seperate [Node.js](http://nodejs.org/) server.~~
 
-## Install
-
-- Install [Node.js](http://nodejs.org/) and npm
-- In Brackets, click on Help > Show Extensions Folder
-- Open the `user` folder
-- Open a shell and navigate to that folder
-- Clone the extension manager:
-
-        git clone git://github.com/jdiehl/brackets-extension-manager.git extension-manager
-
-- Install the necessary node modules
-
-        cd extension-manager
-        npm install
-    
-## Run
-
-- Open a shell in the extension manager folder
-- Run the [Node.js](http://nodejs.org/) server:
-
-        node server
-
-- Start Brackets
-
-Open the extension manager via the Tools menu or by using the shortcut **Ctrl-Shift-E** (**Command-Shift-E** on the Mac).
-
-## Compatibility
-
-Combinations known to work:
-
-- Mac OS X 10.7 and Node.js 0.6
-- Windows XP SP3 and Node.js 0.8
-
-Please contact us for results with different combinations - working or not!
-
 ## License
 
 Copyright (c) 2012 Adobe Systems Incorporated. All rights reserved.
